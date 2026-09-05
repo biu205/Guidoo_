@@ -34,7 +34,7 @@ export default function TeacherLayout({ children }: LayoutProps<"/teacher">) {
   }, [router]);
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="flex h-dvh flex-col overflow-hidden md:flex-row">
       {/* Desktop sidebar */}
       <aside className="hidden w-60 shrink-0 flex-col border-r border-hairline bg-card md:flex">
         <div className="px-6 py-5">
@@ -59,7 +59,7 @@ export default function TeacherLayout({ children }: LayoutProps<"/teacher">) {
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Desktop top bar */}
-        <header className="hidden items-center gap-3 border-b border-hairline bg-card px-8 py-4 md:flex">
+        <header className="hidden shrink-0 items-center gap-3 border-b border-hairline bg-card px-8 py-4 md:flex">
           <div className="flex items-center gap-3 text-sm text-slate-600">
             {t.className && <span>{t.className}</span>}
           </div>
@@ -70,7 +70,7 @@ export default function TeacherLayout({ children }: LayoutProps<"/teacher">) {
         </header>
 
         {/* Mobile top bar */}
-        <header className="flex items-center justify-between border-b border-hairline bg-card px-4 py-3 md:hidden">
+        <header className="flex shrink-0 items-center justify-between border-b border-hairline bg-card px-4 py-3 md:hidden">
           <button
             aria-label="選單"
             onClick={() => setDrawerOpen(true)}
@@ -82,7 +82,7 @@ export default function TeacherLayout({ children }: LayoutProps<"/teacher">) {
           <Avatar initial={t.initial} size="sm" tone="slate" />
         </header>
 
-        <main className="min-h-0 flex-1 pb-16 md:pb-0">{children}</main>
+        <main className="min-h-0 flex-1 overflow-y-auto pb-16 md:pb-0">{children}</main>
 
         {/* Mobile bottom tabs */}
         <nav className="fixed inset-x-0 bottom-0 z-20 flex border-t border-hairline bg-card md:hidden">

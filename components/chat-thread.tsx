@@ -36,7 +36,7 @@ export function ChatThread({
   const [localMessages, setLocalMessages] = useState(messagesProp);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
-  const endRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   const messages = controlled ? messagesProp : localMessages;
 
@@ -44,8 +44,13 @@ export function ChatThread({
   useEffect(() => {
     if (!controlled) setLocalMessages(messagesProp);
   }, [messagesProp, controlled]);
+
+  // Keep the newest message in view: on open (messages first arrive) and after
+  // every send/refresh, jump the *inner* list to the bottom. Scrolling further
+  // up to read history is left to the user.
   useEffect(() => {
-    endRef.current?.scrollIntoView({ block: "end" });
+    const el = listRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
   const sendAccent = viewer === "teacher" ? "bg-parent" : "bg-brand";
@@ -93,7 +98,10 @@ export function ChatThread({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex-1 space-y-3 overflow-y-auto px-4 py-5 sm:px-6">
+      <div
+        ref={listRef}
+        className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-5 sm:px-6"
+      >
         {messages.map((msg, idx) => {
           const mine = isMine(msg, viewer);
           // An AI-agent reply on the viewer's own side gets a distinct look:
@@ -127,10 +135,9 @@ export function ChatThread({
             </div>
           );
         })}
-        <div ref={endRef} />
       </div>
 
-      <div className="flex items-center gap-2 border-t border-hairline bg-card px-4 py-3 sm:px-6">
+      <div className="flex shrink-0 items-center gap-2 border-t border-hairline bg-card px-4 py-3 sm:px-6">
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}

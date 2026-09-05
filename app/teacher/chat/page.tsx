@@ -159,7 +159,7 @@ export default function TeacherChatPage() {
   return (
     <div className="flex h-full flex-col">
       {/* header row */}
-      <div className={`px-5 pt-6 pb-3 sm:px-8 ${selected ? "hidden md:block" : "block"}`}>
+      <div className={`shrink-0 px-5 pt-6 pb-3 sm:px-8 ${selected ? "hidden md:block" : "block"}`}>
         <h1 className="text-xl font-semibold text-slate-800">與家長的聊天</h1>
       </div>
 
@@ -234,7 +234,7 @@ export default function TeacherChatPage() {
         >
           {selected ? (
             <>
-              <div className="flex items-center gap-3 border-b border-hairline px-4 py-3 sm:px-6">
+              <div className="flex shrink-0 items-center gap-3 border-b border-hairline px-4 py-3 sm:px-6">
                 <button
                   aria-label="返回"
                   onClick={() => setSelectedId(null)}

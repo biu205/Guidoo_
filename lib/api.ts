@@ -29,10 +29,17 @@ export async function api<T = unknown>(path: string, opts: Options = {}): Promis
   });
 
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  let data: unknown = null;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    // Non-JSON body — e.g. an upstream 404/502 HTML page from the proxy when
+    // the backend route doesn't exist. Fall through to the status-based error.
+  }
 
+  const errObj = (data ?? {}) as { error?: string };
   if (!res.ok) {
-    throw new ApiError(res.status, data?.error ?? `Request failed (${res.status})`);
+    throw new ApiError(res.status, errObj.error ?? `Request failed (${res.status})`);
   }
   return data as T;
 }

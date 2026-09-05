@@ -93,7 +93,7 @@ export default function ParentChatPage() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="flex items-center gap-2 border-b border-hairline px-4 py-3">
+      <div className="flex shrink-0 items-center gap-2 border-b border-hairline px-4 py-3">
         <Link
           href="/login"
           aria-label="返回"

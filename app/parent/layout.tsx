@@ -20,8 +20,8 @@ export default function ParentLayout({ children }: LayoutProps<"/parent">) {
   }, [router]);
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-lg flex-col bg-card shadow-sm">
-      <header className="flex items-center justify-between border-b border-hairline px-4 py-3">
+    <div className="mx-auto flex h-dvh w-full max-w-lg flex-col overflow-hidden bg-card shadow-sm">
+      <header className="flex shrink-0 items-center justify-between border-b border-hairline px-4 py-3">
         <Wordmark className="text-xl" />
         <span className="text-sm text-slate-600">{name}</span>
       </header>
