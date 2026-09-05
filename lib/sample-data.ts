@@ -1,10 +1,9 @@
 // Front-end sample data for the Guidoo UI.
 //
-// These screens are built from the Figma mockups only. The backend does not
-// yet expose GET endpoints for the dashboard task list, the calendar, the
-// chat conversation list, or the note history, so the pages render from the
-// fixtures below. Swap each `SAMPLE_*` export for a real `fetch(...)` once the
-// corresponding route exists.
+// Only the calendar still renders from a fixture here (no backend endpoint
+// exists for it yet). Login, both chat rooms, the dashboard task list and the
+// notes form are all wired to the live API. `ChatMessage` / `ChatAuthor` stay
+// as the shared message shape the chat components use.
 
 export type TeacherIdentity = {
   name: string;
@@ -133,7 +132,7 @@ export const SAMPLE_EVENTS: CalendarEvent[] = [
 ];
 
 /* ------------------------------------------------------------------ */
-/* Chatroom — conversation list + threads                             */
+/* Chat — shared message shape used by both chat rooms (data is live)  */
 /* ------------------------------------------------------------------ */
 
 export type ChatAuthor = "parent" | "agent" | "teacher";
@@ -145,168 +144,6 @@ export type ChatMessage = {
   time: string;
   read?: boolean; // show 已讀 under the latest outgoing message
 };
-
-export type Conversation = {
-  id: string;
-  parentName: string; // 徐晨哲 媽媽
-  initial: string;
-  className: string;
-  lastReplyTime: string;
-  preview: string;
-  time: string;
-  urgent: boolean;
-  messages: ChatMessage[];
-};
-
-export const SAMPLE_CONVERSATIONS: Conversation[] = [
-  {
-    id: "c1",
-    parentName: "徐晨哲 媽媽",
-    initial: "徐",
-    className: "三年 2 班",
-    lastReplyTime: "10:24",
-    preview: "老師好，我下午三點後有空…",
-    time: "10:24",
-    urgent: false,
-    messages: [
-      { id: "m1", author: "parent", text: "老師好，晨哲昨天回家有提到午休的事。", time: "10:18" },
-      {
-        id: "m2",
-        author: "agent",
-        text: "媽媽好，今天午休時和同學有口角，我已經陪兩個孩子談過，情緒都平穩了。",
-        time: "10:20",
-        read: true,
-      },
-      { id: "m3", author: "parent", text: "謝謝老師，我下午三點後有空，可以聊 5 分鐘嗎？", time: "10:22" },
-      {
-        id: "m4",
-        author: "teacher",
-        text: "沒問題，我三點半打給您，先跟您約在電話上。",
-        time: "10:24",
-      },
-    ],
-  },
-  {
-    id: "c2",
-    parentName: "邱品諺 爸爸",
-    initial: "邱",
-    className: "三年 2 班",
-    lastReplyTime: "09:12",
-    preview: "作業的部分我會盯著他…",
-    time: "09:12",
-    urgent: false,
-    messages: [
-      { id: "m1", author: "parent", text: "老師，品諺這週的數學作業狀況如何？", time: "09:05" },
-      {
-        id: "m2",
-        author: "agent",
-        text: "爸爸好，品諺這三天有兩次未交作業，今天已經和他確認過原因。",
-        time: "09:08",
-        read: true,
-      },
-      { id: "m3", author: "parent", text: "作業的部分我會盯著他，謝謝老師提醒。", time: "09:12" },
-    ],
-  },
-  {
-    id: "c3",
-    parentName: "林子晴 媽媽",
-    initial: "林",
-    className: "三年 2 班",
-    lastReplyTime: "昨天",
-    preview: "她最近腸胃不太好…",
-    time: "昨天",
-    urgent: false,
-    messages: [
-      { id: "m1", author: "parent", text: "老師，子晴這兩天午餐吃得很少。", time: "昨天 12:40" },
-      { id: "m2", author: "parent", text: "她最近腸胃不太好，麻煩老師多留意一下。", time: "昨天 12:41" },
-      {
-        id: "m3",
-        author: "teacher",
-        text: "好的，我今天午餐會特別注意，觀察兩天後再跟您回報。",
-        time: "昨天 13:05",
-        read: true,
-      },
-    ],
-  },
-  {
-    id: "c4",
-    parentName: "蘇宥勳 媽媽",
-    initial: "蘇",
-    className: "三年 2 班",
-    lastReplyTime: "昨天",
-    preview: "早上出門會再提早 10 分鐘",
-    time: "昨天",
-    urgent: false,
-    messages: [
-      { id: "m1", author: "parent", text: "老師，宥勳這週遲到兩次，我們會調整作息。", time: "昨天 08:20" },
-      {
-        id: "m2",
-        author: "agent",
-        text: "媽媽好，謝謝配合，早自習前到校對他銜接課程會順很多。",
-        time: "昨天 08:25",
-        read: true,
-      },
-      { id: "m3", author: "parent", text: "早上出門會再提早 10 分鐘。", time: "昨天 08:31" },
-    ],
-  },
-  {
-    id: "c5",
-    parentName: "曾若瑄 媽媽",
-    initial: "曾",
-    className: "三年 2 班",
-    lastReplyTime: "9/3",
-    preview: "太好了，會鼓勵她！",
-    time: "9/3",
-    urgent: false,
-    messages: [
-      { id: "m1", author: "parent", text: "老師好，想問若瑄最近數學的狀況。", time: "9/3 14:50" },
-      {
-        id: "m2",
-        author: "agent",
-        text: "媽媽好，若瑄這次數學小考進步了 15 分，想跟您分享這個好消息。",
-        time: "9/3 15:10",
-        read: true,
-      },
-      { id: "m3", author: "parent", text: "太好了，會鼓勵她！", time: "9/3 15:22" },
-    ],
-  },
-  {
-    id: "c6",
-    parentName: "郭冠霖 媽媽",
-    initial: "郭",
-    className: "三年 2 班",
-    lastReplyTime: "9/2",
-    preview: "同意書我明天讓他帶去",
-    time: "9/2",
-    urgent: false,
-    messages: [
-      { id: "m1", author: "parent", text: "老師好，校外教學的同意書是不是還沒交？", time: "9/2 16:20" },
-      {
-        id: "m2",
-        author: "agent",
-        text: "媽媽好，是的還沒收到，麻煩這週回傳。",
-        time: "9/2 16:40",
-        read: true,
-      },
-      { id: "m3", author: "parent", text: "同意書我明天讓他帶去。", time: "9/2 17:02" },
-    ],
-  },
-];
-
-/* ------------------------------------------------------------------ */
-/* Parent chat — the parent's single thread with the teacher          */
-/* ------------------------------------------------------------------ */
-
-export const SAMPLE_PARENT_THREAD: ChatMessage[] = [
-  {
-    id: "p1",
-    author: "teacher",
-    text: "媽媽好，今天午休晨哲和同學有口角，我已陪兩個孩子談過，情緒平穩了。",
-    time: "10:20",
-  },
-  { id: "p2", author: "teacher", text: "想跟您約 5 分鐘電話，聊聊他最近的情緒。", time: "10:21" },
-  { id: "p3", author: "parent", text: "好的老師，我下午三點後有空。", time: "10:24", read: true },
-];
 
 /* ------------------------------------------------------------------ */
 /* Notes — 記錄學校事項                                               */
