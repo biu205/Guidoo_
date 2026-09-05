@@ -1,26 +1,72 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f1f2f4;
+  --foreground: #1f2933;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist-sans), "PingFang TC", "Noto Sans TC", "Microsoft JhengHei",
+    system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-brand: var(--font-brand), var(--font-geist-sans), "PingFang TC", system-ui, sans-serif;
+
+  /* Guidoo palette — pulled from the Figma screens */
+  --color-brand: #d99f3c; /* gold — teacher accent, wordmark, "我是老師" */
+  --color-brand-strong: #cf922b;
+  --color-brand-soft: #f5e2bd;
+  --color-parent: #35648f; /* blue — parent accent, sidebar, "我是家長", calendar panel */
+  --color-parent-strong: #2e5a86;
+  --color-parent-soft: #d7e3f0;
+  --color-guidoo-green: #7fb95a; /* incoming bubbles, "處理完畢", calendar highlights */
+  --color-bubble-in: #d9ecc5;
+  --color-bubble-out: #e7b955;
+  --color-urgent: #d64545;
+  --color-watch: #e0a93d;
+  --color-card: #ffffff;
+  --color-hairline: #e4e6ea;
+}
+
+/* Type scale — one notch up from Tailwind's defaults. Kept as non-inline vars
+   (paired line-heights stay ratios, so they scale automatically) so the
+   mobile media query below can bump them two more notches. */
+@theme {
+  --text-xs: 0.8125rem; /* 13px */
+  --text-sm: 0.9375rem; /* 15px */
+  --text-base: 1.0625rem; /* 17px */
+  --text-lg: 1.1875rem; /* 19px */
+  --text-xl: 1.375rem; /* 22px */
+  --text-2xl: 1.625rem; /* 26px */
+  --text-3xl: 2rem; /* 32px */
+  --text-4xl: 2.5rem; /* 40px */
+}
+
+/* Phones: two further notches larger. */
+@media (width < 48rem) {
+  :root {
+    --text-xs: 0.9375rem; /* 15px */
+    --text-sm: 1.0625rem; /* 17px */
+    --text-base: 1.1875rem; /* 19px */
+    --text-lg: 1.3125rem; /* 21px */
+    --text-xl: 1.5625rem; /* 25px */
+    --text-2xl: 1.875rem; /* 30px */
+    --text-3xl: 2.25rem; /* 36px */
+    --text-4xl: 2.75rem; /* 44px */
+  }
 }
 
 @media (prefers-color-scheme: dark) {
+  /* The Figma design is light-only; keep a single committed look. */
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #f1f2f4;
+    --foreground: #1f2933;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
