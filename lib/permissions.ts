@@ -1,6 +1,6 @@
 import type postgres from "postgres";
 import { ApiError } from "./errors";
-import type { Scope } from "./types";
+import type { LinkedParent, Scope } from "./types";
 
 type Sql = postgres.Sql;
 
@@ -86,6 +86,16 @@ export async function assertTeacherCanAuthor(
   if (!(await teacherTeachesInSchool(sql, teacherUserId, scopeId))) {
     throw new ApiError(403, "You don't teach at this school");
   }
+}
+
+/** Every parent account linked to a student — usually one, occasionally more. */
+export async function getLinkedParents(sql: Sql, studentId: string): Promise<LinkedParent[]> {
+  return sql<LinkedParent[]>`
+    select u.id, u.name
+    from parent_student ps
+    join users u on u.id = ps.parent_user_id
+    where ps.student_id = ${studentId}
+  `;
 }
 
 /**

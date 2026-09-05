@@ -35,6 +35,10 @@ export type SessionPayload = {
   name: string;
 };
 
+export type MessageRole = "parent" | "teacher" | "assistant";
+
+export type LinkedParent = { id: string; name: string };
+
 export type ChatSource = {
   type: "note" | "fact";
   id: string;

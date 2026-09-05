@@ -13,10 +13,14 @@ export async function GET(req: Request) {
     await assertCanReadHistory(sql, session, studentId);
 
     const messages = await sql`
-      select id, role, content, status, created_at as "createdAt"
-      from messages
-      where student_id = ${studentId}
-      order by created_at asc
+      select
+        m.id, m.role, m.content, m.status, m.created_at as "createdAt",
+        m.author_teacher_id as "authorTeacherId",
+        t.name as "authorTeacherName"
+      from messages m
+      left join users t on t.id = m.author_teacher_id
+      where m.student_id = ${studentId}
+      order by m.created_at asc
     `;
 
     return NextResponse.json({ messages });
