@@ -54,6 +54,30 @@ function priorityOf(e: ApiEscalation): Priority {
   return "info";
 }
 
+// The dashboard feed still returns escalations that have been resolved (it has
+// no status filter, and doesn't send the status back), so remember which ones
+// this teacher has cleared and hide them on every load.
+const RESOLVED_KEY = "guidoo.resolvedEscalations";
+
+function getResolvedIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(RESOLVED_KEY);
+    return new Set(raw ? (JSON.parse(raw) as string[]) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function markResolved(id: string) {
+  try {
+    const ids = getResolvedIds();
+    ids.add(id);
+    localStorage.setItem(RESOLVED_KEY, JSON.stringify([...ids]));
+  } catch {
+    /* storage disabled — the row still disappears until the next reload */
+  }
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
@@ -68,15 +92,18 @@ export default function DashboardPage() {
           `/dashboard?classId=${classId}`,
           { token }
         );
+        const resolved = getResolvedIds();
         setTasks(
-          res.recentEscalations.map((e) => ({
-            id: e.id,
-            studentName: e.studentName,
-            summary: (e.question ?? "（無內容）").trim(),
-            time: fmtTime(e.createdAt),
-            priority: priorityOf(e),
-            done: false,
-          }))
+          res.recentEscalations
+            .filter((e) => !resolved.has(e.id))
+            .map((e) => ({
+              id: e.id,
+              studentName: e.studentName,
+              summary: (e.question ?? "（無內容）").trim(),
+              time: fmtTime(e.createdAt),
+              priority: priorityOf(e),
+              done: false,
+            }))
         );
         setState("ready");
       } catch (err) {
@@ -104,9 +131,13 @@ export default function DashboardPage() {
 
   async function resolve(id: string) {
     if (!session) return;
+    // `done` is a transient in-flight flag here — it greys the row and disables
+    // the button until the POST lands, then the row is dropped for good.
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: true } : t)));
     try {
       await api(`/escalations/${id}/resolve`, { method: "POST", token: session.token });
+      markResolved(id);
+      setTasks((prev) => prev.filter((t) => t.id !== id));
     } catch {
       // revert on failure
       setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: false } : t)));
