@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Wordmark } from "@/components/wordmark";
 import { Avatar } from "@/components/avatar";
-import { getSession } from "@/lib/session";
+import { getSession, clearSession } from "@/lib/session";
 
 const NAV = [
   { href: "/teacher/dashboard", label: "總表", icon: IconList },
@@ -19,6 +19,11 @@ export default function TeacherLayout({ children }: LayoutProps<"/teacher">) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [t, setT] = useState({ name: "老師", initial: "師", className: "" });
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
+
+  function switchIdentity() {
+    clearSession();
+    router.push("/login");
+  }
 
   useEffect(() => {
     const s = getSession();
@@ -55,6 +60,13 @@ export default function TeacherLayout({ children }: LayoutProps<"/teacher">) {
             </Link>
           ))}
         </nav>
+
+        <button
+          onClick={switchIdentity}
+          className="mt-auto border-t border-hairline px-6 py-4 text-left text-sm text-slate-500 transition-colors hover:bg-slate-50"
+        >
+          切換身分
+        </button>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
@@ -66,6 +78,12 @@ export default function TeacherLayout({ children }: LayoutProps<"/teacher">) {
           <div className="ml-auto flex items-center gap-3">
             <span className="text-sm font-medium text-slate-800">{t.name}</span>
             <Avatar initial={t.initial} size="sm" tone="slate" />
+            <button
+              onClick={switchIdentity}
+              className="rounded-full border border-hairline px-3 py-1 text-xs text-slate-500 transition-colors hover:bg-slate-50"
+            >
+              切換身分
+            </button>
           </div>
         </header>
 
@@ -130,13 +148,15 @@ export default function TeacherLayout({ children }: LayoutProps<"/teacher">) {
                 </Link>
               ))}
             </nav>
-            <Link
-              href="/login"
-              onClick={() => setDrawerOpen(false)}
-              className="mt-6 block rounded-lg px-3 py-3 text-sm text-slate-500 hover:bg-slate-50"
+            <button
+              onClick={() => {
+                setDrawerOpen(false);
+                switchIdentity();
+              }}
+              className="mt-6 block w-full rounded-lg px-3 py-3 text-left text-sm text-slate-500 hover:bg-slate-50"
             >
               切換身分
-            </Link>
+            </button>
           </div>
         </div>
       )}
